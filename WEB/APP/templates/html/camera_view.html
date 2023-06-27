@@ -1,0 +1,280 @@
+{% load static %} <!-- 정적 파일 접근 -->
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+   <!--요구되는 meta 태그-->
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <title>감정 극장</title> <!-- 웹 페이지의 제목 설정 -->
+  <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+  <link href="https://fonts.googleapis.com/css2?family=Source+Sans+3:ital,wght@1,500&display=swap" rel="stylesheet">
+  <script src="https://kit.fontawesome.com/1e02c0ecf7.js" crossorigin="anonymous"></script>
+  <script src="{% static 'js/mainheader.js'%}" defer></script>
+  <style>
+    :root {
+        --text-color: #505050;
+        --background-color: #D36EEC;
+        --accent-color: #19e2f0;
+    }
+
+    body { padding: 0px; margin: 0px; }
+
+    .backDVD {
+        position : fixed;
+        top : 0;
+        left : 0;
+        min-width : 100 %;
+        min-height : 100 %;
+        width : 100%;
+        height : auto;
+        z-index : -1;
+	}
+
+    header {
+        margin: 0;
+        font-family: 'Source Sans 3';
+    }
+
+    a {
+        text-decoration: none;
+        color: #505050;
+    }
+    .navbar {
+        margin-right: 50px;
+        margin-left: 50px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background-color:transparent;
+        padding: 8px 12px;
+    }
+
+    .navbar__logo {
+        font-size: 40px;
+        color: var(--text-color);
+    }
+
+    .navbar__logo i {
+        color: var(--accent-color);
+    }
+
+
+    .navbar__icons {
+        list-style: none;
+        color: var(--text-color);
+        display: flex;
+        padding-left: 0;
+    }
+
+    .navbar__icons a li {
+      font-size: 25px;
+      padding: 10px 100px;
+      background-color: #8C8CBE;
+      letter-spacing: 10px;
+      text-align: center;
+    }
+
+    .navbar__icons a li:hover {
+        border-radius: 60px;
+    }
+
+
+    .navbar__toogleBtn {
+        display: none;
+        position: absolute;
+        right: 50px;
+        font-size: 40px;
+        color: #000000;
+
+    }
+
+    @media screen and (max-width: 768px) {
+        .navbar{
+            flex-direction: column;
+            align-items: flex-start;
+            padding: 8px 24px;
+        }
+
+        .navbar__icons {
+            display: none;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .navbar__icons a li {
+            padding: 20px 300px;
+
+            text-align: center;
+        }
+
+        .navbar__toogleBtn {
+            display: block;
+        }
+
+        .navbar__icons.active{
+            display: flex;
+        }
+    }
+
+    .mainbody {
+
+      color: #424242;
+      font-family: 'Arial', sans-serif;
+
+    }
+    .container {
+      display: flex;
+      justify-content: space-around;
+      margin-top: 0px;
+    }
+    .webcam, .movie-list {
+      margin: 20px;
+      padding: 30px;
+      border: 3px solid #808080;
+      border-radius: 10px;
+      background-color: rgba(255, 255, 255, 0.5);;
+      color: #424242;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+
+    }
+    .webcam video {
+      display: block;
+      margin: auto;
+      border-radius: 10px;
+    }
+    .movie-list {
+      flex-grow: 1;
+      overflow: auto;
+      max-height: 90vh;
+    }
+    h2 {
+      text-align: center;
+      color: #03c75a;
+    }
+    button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 18px;
+      border: none;
+      border-radius: 5px;
+      color: #ffffff;
+      background-color: #03c75a;
+    }
+    button:hover {
+      background-color: #028442;
+    }
+    ul {
+      list-style: none;
+      padding: 0;
+    }
+    li {
+      margin-bottom: 10px;
+      padding: 15px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background-color: #f9f9f9;
+      box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
+    }
+    .material-icons {
+      vertical-align: middle;
+    }
+  </style>
+</head>
+<body>
+<div class="jb-box">
+  <video class="backDVD" muted autoplay loop>
+    <source src="{% static 'video/movie_video.mp4' %}" type="video/mp4">
+    <strong>Your browser does not support the video tag.</strong>
+  </video>
+</div>
+  <header class="mainhead">
+    <nav class="navbar">
+      <div class="navbar__logo">
+        <i class="fa-sharp fa-solid fa-heart-pulse fa-beat-fade fa-sm" style="color: #19e2f0;"></i>
+        <a href="">EmotionTheater</a>
+      </div>
+      <ul class="navbar__icons">
+        <a href="{% url 'APP:quest' %}"> <li>F  A  Q</li></a>
+      </ul>
+      <a href="#" class="navbar__toogleBtn">
+        <i class="fa-solid fa-bars"></i>
+      </a>
+    </nav>
+  </header>
+  <section class="mainbody">
+    <div class="container"> <!-- 웹캠과 영화 목록 -->
+      <div class="webcam">
+        <h2><i class="material-icons">face</i> 당신의 현재 표정</h2>
+        <video id="video" width="800" height="600" autoplay></video> <!-- 웹캠 -->
+        <button onclick="captureImage()"><i class="material-icons">camera</i> 캡처</button> <!-- 캡처 버튼 -->
+      </div>
+      <div class="movie-list"> <!-- 추천 영화 목록 -->
+        <h2><i class="material-icons">local_movies</i> 추천 영화 목록</h2>
+        <ul id="movie-list"></ul>
+      </div>
+    </div>
+    </section>
+
+    <script>
+      const video = document.getElementById('video'); // video 요소를 가져옴
+      const canvas = document.createElement('canvas'); // 캔버스 요소 생성
+      const context = canvas.getContext('2d'); // 캔버스 컨텍스트 생성
+      const movieList = document.getElementById('movie-list'); // 영화 목록을 표시할 리스트 요소
+
+      function getCSRFToken() {
+        // CSRF 토큰을 쿠키에서 가져오는 함수
+        let cookieValue = null;
+        let name = 'csrftoken';
+        if (document.cookie && document.cookie !== '') {
+          let cookies = document.cookie.split(';');
+          for (let i = 0; i < cookies.length; i++) {
+            let cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+              cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+              break;
+            }
+          }
+        }
+        return cookieValue;
+      }
+
+      navigator.mediaDevices.getUserMedia({ video: true })
+        .then(stream => {
+          // 웹캠 비디오 스트림 시작
+          video.srcObject = stream;
+        });
+
+      function captureImage() {
+        // 비디오 스트림으로부터 이미지를 캡처하는 함수
+        canvas.width = video.videoWidth; // 캔버스의 너비를 비디오 너비로 설정
+        canvas.height = video.videoHeight; // 캔버스의 높이를 비디오 높이로 설정
+        context.drawImage(video, 0, 0); // 캔버스에 비디오 프레임을 그림
+        canvas.toBlob(blob => {
+          // 캡처된 이미지를 Blob 객체로 변환
+          const formData = new FormData();
+          formData.append('camera-image', blob, 'image.png'); // FormData에 이미지 Blob 첨부
+
+          fetch('', {
+            method: 'POST',
+            headers: {
+              'X-CSRFToken': getCSRFToken() // CSRF 토큰을 헤더에 추가
+            },
+            body: formData // FormData를 요청의 본문으로 설정하여 서버로 전송
+          })
+            .then(response => response.json())
+            .then(data => {
+              // 서버로부터 받은 영화 목록을 동적으로 생성
+              movieList.innerHTML = ''; // 기존 목록 초기화
+              data.movies.forEach(movie => {
+                const li = document.createElement('li');
+                li.textContent = `${movie.영화명} - 장르: ${movie.장르}, 제작국가: ${movie.제작국가}, 제작연도: ${movie.제작연도}`;
+                movieList.appendChild(li);
+              });
+            });
+        }, 'image/png');
+      }
+    </script>
+  </body>
+</html>
